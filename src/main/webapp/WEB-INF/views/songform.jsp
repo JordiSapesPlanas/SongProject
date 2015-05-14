@@ -10,12 +10,12 @@
         <c:when test="${song.getId()>=0}">
             <h3>Update Greeting</h3>
             <c:set var="method" value="PUT"/>
-            <c:set var="action" value="songs/${song.getId()}"/>
+            <c:set var="action" value="songs/${song.getId}"/>
         </c:when>
         <c:otherwise>
             <h3>Create Song</h3>
             <c:set var="method" value="POST"/>
-            <c:set var="action" value="songs/${song.getId()}"/>
+            <c:set var="action" value="songs/"/>
         </c:otherwise>
     </c:choose>
 

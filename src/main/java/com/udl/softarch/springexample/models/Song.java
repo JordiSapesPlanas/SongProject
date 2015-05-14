@@ -24,14 +24,12 @@ public class Song {
     @NotBlank(message = "Not empty band")
     @Size(max = 256, message = "Band name, max length is {max}")
     private String band;
-    @NotBlank(message = "not blank")
-    @Size(max = 256)
-    private String email;
+
 
 
     public Song() {}
 
-    public Song(String name, String band, Date date) {
+    public Song(String name, String band) {
         this.name = name;
         this.band = band;
 
@@ -57,11 +55,5 @@ public class Song {
         this.band = band;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

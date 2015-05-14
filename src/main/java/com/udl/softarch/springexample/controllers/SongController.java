@@ -26,14 +26,14 @@ import static com.udl.softarch.springexample.repositories.SongRepository.*;
  */
 
 @Controller
-@RequestMapping("/songCollection/{idCollection}/songs")
+@RequestMapping("/songCollection/{idCollection}/")
 public class SongController {
 
     @Autowired
     SongRepository songRepository;
 
     // LIST
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/songs", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Song> list(@RequestParam(required = false, defaultValue = "0") int page,
                                    @RequestParam(required = false, defaultValue = "10") int size) {
@@ -41,7 +41,7 @@ public class SongController {
         return  songRepository.findAll(request).getContent();
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value = "/songs",method = RequestMethod.GET, produces = "text/html")
     public ModelAndView listHtml(@RequestParam(required = false, defaultValue = "0") int page,
                                  @RequestParam(required = false, defaultValue = "10") int size,
                                  @PathVariable("idCollection") Long idCol) {
@@ -52,36 +52,54 @@ public class SongController {
     }
 
     // obtener / retrieve
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/songs/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Song retrieve(@PathVariable("id") Long id) {
+        System.out.println(4);
         Preconditions.checkNotNull(songRepository.findOne(id), "Greeting with id %s not found", id);
         return songRepository.findOne(id);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView retrieveHTML(@PathVariable( "id" ) Long id) {
-        return new ModelAndView("songview", "song", retrieve(id));
+    @RequestMapping(value = "/songs/{id}", method = RequestMethod.GET, produces = "text/html")
+    public ModelAndView retrieveHTML(@PathVariable( "id" ) Long id,
+                                     @PathVariable("idCollection") Long idCol) {
+
+        Map <String, Object> model = new HashMap<>();
+
+        Song s = retrieve(id);
+        model.put("song", retrieve(id));
+
+
+        model.put("idCollection", idCol);
+
+
+
+        return new ModelAndView("songview", "map", model);
     }
 
     // CREATE
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/songs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Song create(@Valid @RequestBody Song song, HttpServletResponse response) {
-        return songRepository.save(song);
+        System.out.println(2);
+        Song s = songRepository.save(song);
+        System.out.println(s.getId());
+        return s;
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "text/html")
+    @RequestMapping(value = "/songs" , method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "text/html")
     public String createHtml(@Valid @ModelAttribute("song") Song song, BindingResult binding, HttpServletResponse response) {
         if(binding.hasErrors()) {
             return "songform";
         }
-        return "redirect:/songCollection/{id}/songs/" + create(song, response).getId();
+        System.out.println(1);
+
+        return "redirect:" + create(song, response).getId();
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView createForm(@PathVariable("idCollection") Long idCol){
+    public ModelAndView createForm(){
 
         Song emptysong = new Song();
         //emptyGreeting.setDate(new Date());
@@ -89,7 +107,7 @@ public class SongController {
     }
 
     // UPDATE
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/songs/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Song update(@PathVariable("id") Long id, @Valid @RequestBody Song song) {
@@ -99,7 +117,7 @@ public class SongController {
         return songRepository.save(oldSong);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/x-www-form-urlencoded")
+    @RequestMapping(value = "/songs/{id}", method = RequestMethod.PUT, consumes = "application/x-www-form-urlencoded")
     @ResponseStatus(HttpStatus.OK)
     public String updateHTML(@PathVariable("id") Long id, @Valid @ModelAttribute("song") Song song,
                              BindingResult binding) {
@@ -110,19 +128,19 @@ public class SongController {
     }
 
     // Update form
-    @RequestMapping(value = "/{id}/form", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value = "/songs/{id}/form", method = RequestMethod.GET, produces = "text/html")
     public ModelAndView updateForm(@PathVariable("id") Long id) {
         return new ModelAndView("songform", "song", songRepository.findOne(id));
     }
 
     // DELETE
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/songs/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("id") Long id) {
         songRepository.delete(songRepository.findOne(id));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
+    @RequestMapping(value = "/songs/{id}", method = RequestMethod.DELETE, produces = "text/html")
     @ResponseStatus(HttpStatus.OK)
     public String deleteHTML(@PathVariable("id") Long id) {
         delete(id);

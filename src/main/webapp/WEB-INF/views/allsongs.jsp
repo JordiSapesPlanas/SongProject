@@ -34,6 +34,6 @@
 
     </ul>
     <a href="/songCollection/${map.idCollection}"> return </a>
-    <a href="songs/form">New Song</a>
+    <a href="form">New Song</a>
 </body>
 </html>
