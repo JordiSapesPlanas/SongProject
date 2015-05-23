@@ -15,7 +15,7 @@
         <c:otherwise>
             <h3>Create Song</h3>
             <c:set var="method" value="GET"/>
-            <c:set var="action" value="songs/search"/>
+            <c:set var="action" value="search"/>
         </c:otherwise>
     </c:choose>
 

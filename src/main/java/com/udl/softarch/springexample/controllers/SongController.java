@@ -82,11 +82,7 @@ public class SongController {
             return bandList;
 
 
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -96,7 +92,6 @@ public class SongController {
     public ModelAndView listArtistsBySongHTML(@RequestParam(value = "band" , required = true) String band,
                                               @RequestParam(value ="name" , required = true)String song,
                                                 @PathVariable("idCollection") Long idCol)throws Exception {
-        System.out.println("5555555555555555555555555555555555555555555555555");
         Map <String, Object> model = new HashMap<>();
         model.put("bands", listArtistsBySong(band, song));
         model.put("song", song);
@@ -137,15 +132,9 @@ public class SongController {
                                      @PathVariable("idCollection") Long idCol) {
 
         Map <String, Object> model = new HashMap<>();
-
         Song s = retrieve(id);
         model.put("song", retrieve(id));
-
-
         model.put("idCollection", idCol);
-
-
-
         return new ModelAndView("songview", "map", model);
     }
 
@@ -154,28 +143,27 @@ public class SongController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Song create(@Valid @RequestBody Song song, HttpServletResponse response) {
-        System.out.println(2);
         Song s = songRepository.save(song);
-        System.out.println(s.getId());
+        System.out.println("produces data");
         return s;
     }
 
     @RequestMapping(value = "/songs" , method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "text/html")
-    public String createHtml(@Valid @ModelAttribute("song") Song song, BindingResult binding, HttpServletResponse response) {
-
+    public String createHtml(@Valid @ModelAttribute("song") Song song, BindingResult binding, HttpServletResponse response,
+                             @PathVariable("idCollection") Long idCol) {
+        System.out.println("produces html");
         if(binding.hasErrors()) {
-            return "songform";
+            return "redirect:/songCollection/"+idCol+"/songs/form";
         }
-        System.out.println(1);
 
-        return "redirect:" + create(song, response).getId();
+
+        return "/songCollection/"+idCol+"/songs/" + create(song, response).getId();
     }
 
-    @RequestMapping(value = "/form", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value = "/songs/form", method = RequestMethod.GET, produces = "text/html")
     public ModelAndView createForm(){
 
         Song emptysong = new Song();
-        //emptyGreeting.setDate(new Date());
         return new ModelAndView("songform", "song", emptysong);
     }
 
@@ -192,12 +180,14 @@ public class SongController {
 
     @RequestMapping(value = "/songs/{id}", method = RequestMethod.PUT, consumes = "application/x-www-form-urlencoded")
     @ResponseStatus(HttpStatus.OK)
-    public String updateHTML(@PathVariable("id") Long id, @Valid @ModelAttribute("song") Song song,
+    public String updateHTML(@PathVariable("id") Long id,
+                             @Valid @ModelAttribute("song") Song song,
+                             @PathVariable("idCollection")Long idCol,
                              BindingResult binding) {
         if (binding.hasErrors()) {
-            return "songform";
+            return "redirect:/songCollection/"+idCol+"/songs/"+id+"/form";
         }
-        return "redirect:/songCollection/{id}/songs/" + update(id, song).getId();
+        return "redirect:/songCollection/"+idCol+"/songs/" + update(id, song).getId();
     }
 
     // Update form

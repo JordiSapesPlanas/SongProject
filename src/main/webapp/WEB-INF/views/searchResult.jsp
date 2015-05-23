@@ -10,10 +10,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <title>Result list</title>
   <script language="javascript">
     function DoPost(url,song){
-      $.post("/songCollection/"+url+"/songs", song);
+      song.song.substr(0, song.song.length-1);
+      console.log(1);
+
+      $.post("/songCollection/"+url.toString()+"/songs",  JSON.stringify(song), function(data){
+        console.log(444444);
+        $.get("/songCollection/"+url.toString()+"/songs/"+data)
+      }, 'json');
     }
   </script>
 </head>
@@ -25,7 +32,7 @@
     <c:forEach var="band" items="${map.bands}">
 
           <li>
-              <a href="javascript:DoPost(${map.idCollection}, {band:${fn:escapeXml(band)},name:${fn:escapeXml(map.song)}})">${fn:escapeXml(band)} </a>
+              <a href="javascript:DoPost(${map.idCollection}, {band:'${band}',name:'${map.song}'})">${fn:escapeXml(band)} </a>
           </li>
 
     </c:forEach>

@@ -18,14 +18,14 @@
         <c:if test="${not empty map.songs}">
             <c:forEach var="song" items="${map.songs}">
                 <li>
-                    <a href="songs/${song.getId()}">Song ${fn:escapeXml(song.getName())}</a>:
+                    <a href="/songCollection/${map.idCollection}/songs/${song.getId()}">Song ${fn:escapeXml(song.getName())}</a>:
 
                     <ul>
                         <li>
                             ${fn:escapeXml(song.getName())} - ${fn:escapeXml(song.getBand())}
                         </li>
                         <li>
-                            <a href="songs/${song.getId()}/form">Edit Song</a>
+                            <a href="/songCollection/${map.idCollection}/songs/${song.getId()}/form">Edit Song</a>
                         </li>
                     </ul>
                 </li>
@@ -33,7 +33,12 @@
         </c:if>
 
     </ul>
-    <a href="/songCollection/${map.idCollection}"> return </a>
-    <a href="form">New Song</a>
+
+
+
+
+
+    <a href="/songCollection/${map.idCollection}/"> return </a>
+    <a href="/songCollection/${map.idCollection}/songs/form">New Song</a>
 </body>
 </html>
