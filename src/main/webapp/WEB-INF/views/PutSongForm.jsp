@@ -21,7 +21,7 @@
       <td> Name <input type="text" name="name" value="${map.song.getName()}"/></td>
     </tr>
     <tr>
-       <td> Name <input type="text" name="band" value="${map.song.getBand()}"/></td>
+       <td> Band <input type="text" name="band" value="${map.song.getBand()}"/></td>
     </tr>
     <tr>
 
