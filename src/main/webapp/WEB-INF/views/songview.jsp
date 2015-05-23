@@ -8,6 +8,6 @@
     <body>
         <h3>Song: ${fn:escapeXml(map.song.getName())}</h3>
         <p>${fn:escapeXml(map.song.getName())} - ${fn:escapeXml(map.song.getBand())}</p>
-        <a href="/songCollection/${fn:escapeXml(map.idCollection)}/songs"+>Return to list</a>
+        <a href="/songCollection/${fn:escapeXml(map.idCollection)}/songs">Return to list</a>
     </body>
 </html>

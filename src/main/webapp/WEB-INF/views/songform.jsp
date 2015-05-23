@@ -3,17 +3,26 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
-    <title>Song Form</title>
+    <title>
+
+        <c:if test="${song.getId()>=0}">
+         update song
+        </c:if>
+        <c:if test="${song.getId()<0}">
+            search Song
+        </c:if>
+    </title>
 </head>
 <body>
     <c:choose>
         <c:when test="${song.getId()>=0}">
-            <h3>Update Greeting</h3>
+            <h3>Update Song</h3>
             <c:set var="method" value="PUT"/>
-            <c:set var="action" value="songs/${song.getId()}"/>
+            <c:set var="action" value="javascript:history.back()/"/>
+
         </c:when>
         <c:otherwise>
-            <h3>Create Song</h3>
+            <h3>Search Song</h3>
             <c:set var="method" value="GET"/>
             <c:set var="action" value="search"/>
         </c:otherwise>
@@ -26,8 +35,14 @@
                 <td><form:input path="name"/> <i><form:errors path="name"></form:errors></i></td>
             </tr>
             <tr>
+                <c:if test="${song.getId()>=0}">
                 <td><form:label path="band">Band</form:label></td>
                 <td><form:input path="band"/> <i><form:errors path="band"></form:errors></i></td>
+                </c:if>
+                <c:if test="${song.getId()<0}">
+
+                    <td><form:input path="band" value=""/></td>
+                </c:if>
             </tr>
             <tr>
                 <td><input type="submit" value="Submit" /></td>

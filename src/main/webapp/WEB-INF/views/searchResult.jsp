@@ -10,35 +10,37 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <title>Result list</title>
-  <script language="javascript">
-    function DoPost(url,song){
-      song.song.substr(0, song.song.length-1);
-      console.log(1);
 
-      $.post("/songCollection/"+url.toString()+"/songs",  JSON.stringify(song), function(data){
-        console.log(444444);
-        $.get("/songCollection/"+url.toString()+"/songs/"+data)
-      }, 'json');
-    }
-  </script>
+
 </head>
 <body>
 <h2>band list</h2>
-<ul>
-  <c:if test="${not empty map.bands}">
+
+
+<c:if test="${not empty map.bands}">
     <ul>
-    <c:forEach var="band" items="${map.bands}">
+        <c:forEach var="band" items="${map.bands}">
+            <form method="POST" action="/songCollection/${map.idCollection}/songs">
+                <li>
+                    <table>
+                        <tr>
 
-          <li>
-              <a href="javascript:DoPost(${map.idCollection}, {band:'${band}',name:'${map.song}'})">${fn:escapeXml(band)} </a>
-          </li>
+                            <td>${band}<input type="hidden" name="band" value="${band}" />
 
-    </c:forEach>
-      </ul>
-  </c:if>
 
-</ul>
+
+                            <td> - ${map.song} <input type="hidden" name="name" value="${map.song}"/></td>
+                            <td><input type="submit" value="add" /></td>
+                        </tr>
+
+
+
+                    </table>
+                </li>
+
+            </form>
+        </c:forEach>
+    </ul>
+</c:if>
 </body>
 </html>

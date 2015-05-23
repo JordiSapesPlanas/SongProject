@@ -48,8 +48,7 @@ public class SongController {
     @RequestMapping(value = "/songs/search", method = RequestMethod.GET)  //? get parameters from query?
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Iterable<String> listArtistsBySong(/*@Valid @RequestBody Song song, BindingResult binding*/
-    @RequestParam(value = "band" , required = true) String band,  @RequestParam(value ="song" , required = true)String song
+    public Iterable<String> listArtistsBySong(@RequestParam(value ="song" , required = true)String song
     ) throws MalformedURLException {
         ArrayList<String> bandList = new ArrayList<String>();
         String s = "https://musicbrainz.org/ws/2/recording/?query=";
@@ -89,11 +88,10 @@ public class SongController {
         return null;
     }
     @RequestMapping(value = "/songs/search", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView listArtistsBySongHTML(@RequestParam(value = "band" , required = true) String band,
-                                              @RequestParam(value ="name" , required = true)String song,
+    public ModelAndView listArtistsBySongHTML(  @RequestParam(value ="name" , required = true)String song,
                                                 @PathVariable("idCollection") Long idCol)throws Exception {
         Map <String, Object> model = new HashMap<>();
-        model.put("bands", listArtistsBySong(band, song));
+        model.put("bands", listArtistsBySong(song));
         model.put("song", song);
         model.put("idCollection", idCol);
         return new ModelAndView("searchResult", "map", model);
@@ -139,25 +137,29 @@ public class SongController {
     }
 
     // CREATE
-    @RequestMapping(value = "/songs", method = RequestMethod.POST)
+    @RequestMapping(value = "/songs", method = RequestMethod.POST )
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Song create(@Valid @RequestBody Song song, HttpServletResponse response) {
         Song s = songRepository.save(song);
         System.out.println("produces data");
+
         return s;
     }
 
-    @RequestMapping(value = "/songs" , method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "text/html")
+    @RequestMapping(value = "/songs" , method = RequestMethod.POST , consumes = "application/x-www-form-urlencoded", produces = "text/html")
     public String createHtml(@Valid @ModelAttribute("song") Song song, BindingResult binding, HttpServletResponse response,
                              @PathVariable("idCollection") Long idCol) {
         System.out.println("produces html");
         if(binding.hasErrors()) {
+            System.out.println("meeeeu");
             return "redirect:/songCollection/"+idCol+"/songs/form";
         }
 
+        Long id = create(song, response).getId();
+        return "redirect:/songCollection/"+idCol+"/songs/"+id;
 
-        return "/songCollection/"+idCol+"/songs/" + create(song, response).getId();
+        //return "heloo baby";
     }
 
     @RequestMapping(value = "/songs/form", method = RequestMethod.GET, produces = "text/html")
@@ -192,8 +194,13 @@ public class SongController {
 
     // Update form
     @RequestMapping(value = "/songs/{id}/form", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView updateForm(@PathVariable("id") Long id) {
-        return new ModelAndView("songform", "song", songRepository.findOne(id));
+    public ModelAndView updateForm(@PathVariable("id") Long id, @PathVariable("idCollection") Long idCol) {
+        Map <String, Object> model = new HashMap<>();
+       
+        model.put("song", songRepository.findOne(id));
+        model.put("idCollection", idCol);
+
+        return new ModelAndView("PutSongForm", "map", model);
     }
 
     // DELETE

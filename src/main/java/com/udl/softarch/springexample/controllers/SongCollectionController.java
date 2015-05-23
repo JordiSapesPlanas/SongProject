@@ -66,16 +66,14 @@ public class SongCollectionController {
         logger.info("Creating song colletion with content'{}'", songCollection.getName());
         SongCollection newSongCollection = userSongCollectionService.addSongCollectionToUser(songCollection);
         response.setHeader("Location", "/songCollection/" + newSongCollection.getId());
-        System.out.println("------------------------------------------------------------");
         return newSongCollection;
     }
     @RequestMapping(method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces="text/html")
     public String createHTML(@Valid @ModelAttribute("SongCollection") SongCollection songCollection, BindingResult binding, HttpServletResponse response) {
         if (binding.hasErrors()) {
             logger.info("Validation error: {}", binding);
-            return "songCollection/form";
+            return "SongCollectionForm";
         }
-        System.out.println("****************************************************************");
         return "redirect:/songCollection/"+create(songCollection, response).getId();
     }
     // Create form
@@ -101,7 +99,7 @@ public class SongCollectionController {
                              BindingResult binding) {
         if (binding.hasErrors()) {
             logger.info("Validation error: {}", binding);
-            return "form";
+            return "SongCollectionForm";
         }
         return "redirect:/songCollection/"+update(id, songCollection).getId();
     }
