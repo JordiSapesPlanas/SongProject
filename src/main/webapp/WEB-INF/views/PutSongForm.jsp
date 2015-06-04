@@ -4,10 +4,11 @@
 <html>
 <head>
   <title>
-
-
-      update song
+    update song
   </title>
+    <link rel="stylesheet" href="../../mystyle.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
 
@@ -19,15 +20,25 @@
     <tr>
 
       <td> Name <input type="text" name="name" value="${map.song.getName()}"/></td>
-    </tr>
-    <tr>
        <td> Band <input type="text" name="band" value="${map.song.getBand()}"/></td>
-    </tr>
-    <tr>
+        <td><input type="submit" value="Submit" /></td>
 
-      <td><input type="submit" value="Submit" /></td>
+      <td><button id="delete" type="button" value="${map.song.getId()}"> Delete</button></td>
     </tr>
   </table>
 </form:form>
+    <script>
+        $("#delete").click(function(e){
+
+            $.ajax({
+                url: '/songCollection/${map.idCollection}/songs/${map.song.getId()}',
+                type: 'DELETE',
+                success: function(result) {
+                    window.location.href ='/songCollection/${map.idCollection}/songs/'
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

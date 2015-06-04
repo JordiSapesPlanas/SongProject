@@ -11,25 +11,20 @@
 <html>
 <head>
     <title></title>
+    <link rel="stylesheet" href="../../mystyle.css">
 </head>
 <body>
-
+    <header> Create a new collection of Song!</header>
 
  <form:form method="POST" action="/songCollection" modelAttribute="SongCollection">
-    <table>
-        <tr>
-            <td><form:label path="email">Email</form:label></td>
+        <p><form:label path="email">Email</form:label>
 
-            <td><form:input path="email"/> <i><form:errors path="email"></form:errors></i></td>
-        </tr>
-        <tr>
-            <td><form:label path="name">Name</form:label></td>
-            <td><form:input path="name"/> <i><form:errors path="name"></form:errors></i></td>
-        </tr>
-
-
-
-    </table>
+            <form:input path="email"/> <i><form:errors path="email"></form:errors></i>
+        </p>
+        <p>
+            <form:label path="name">Name</form:label>
+            <form:input path="name"/> <i><form:errors path="name"></form:errors></i>
+        </p>
      <input type="submit" value="Submit" />
 </form:form>
 </body>

@@ -8,7 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title></title>
+    <title>
+
+    </title>
+  <link rel="stylesheet" href="./mystyle.css">
 </head>
 <body>
 <h1>HELLO WORLD INDEX</h1>

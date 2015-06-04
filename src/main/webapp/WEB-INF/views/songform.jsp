@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>
-
+        <link rel="stylesheet" href="../../mystyle.css">
         <c:if test="${song.getId()>=0}">
          update song
         </c:if>

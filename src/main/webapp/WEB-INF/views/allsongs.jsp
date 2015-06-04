@@ -8,37 +8,48 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!--<html>
 <head>
     <title>Song list</title>
-</head>
-<body>
-    <h2>Song list</h2>
-    <ul>
-        <c:if test="${not empty map.songs}">
-            <c:forEach var="song" items="${map.songs}">
-                <li>
-                    <a href="/songCollection/${map.idCollection}/songs/${song.getId()}">Song ${fn:escapeXml(song.getName())}</a>:
 
-                    <ul>
-                        <li>
-                            ${fn:escapeXml(song.getName())} - ${fn:escapeXml(song.getBand())}
-                        </li>
-                        <li>
-                            <a href="/songCollection/${map.idCollection}/songs/${song.getId()}/form">Edit Song</a>
-                        </li>
-                    </ul>
-                </li>
+
+
+</head> -->
+ <div>
+    <h3>Songs </h3>
+
+        <c:if test="${not empty map.songs}">
+        <table>
+         <tr>
+             <th>
+                 Band
+
+             </th>
+             <th>
+                 Name
+             </th>
+             <th>
+                 edit
+             </th>
+
+         </tr>
+            <c:forEach var="song" items="${map.songs}">
+                <tr>
+                    <td> ${fn:escapeXml(song.getBand())} </td>
+                    <td><a href="/songCollection/${map.idCollection}/songs/${song.getId()}"> ${fn:escapeXml(song.getName())}</a>: </td>
+
+
+                    <td><a href="/songCollection/${map.idCollection}/songs/${song.getId()}/form">Edit Song</a> </td>
+
+                </tr>
             </c:forEach>
         </c:if>
 
-    </ul>
+    </table>
+     <br>
+    <a href="/songCollection/${map.idCollection}/songs/form">Search Song</a>
 
 
 
-
-
-    <a href="/songCollection/${map.idCollection}/"> return </a>
-    <a href="/songCollection/${map.idCollection}/songs/form">New Song</a>
-</body>
-</html>
+</div>
+<!--</html> -->

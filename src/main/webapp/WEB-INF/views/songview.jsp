@@ -4,6 +4,7 @@
 <html>
     <head>
         <title>Song</title>
+        <link rel="stylesheet" href="../../mystyle.css">
     </head>
     <body>
         <h3>Song: ${fn:escapeXml(map.song.getName())}</h3>

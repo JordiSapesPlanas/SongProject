@@ -11,23 +11,25 @@
 <html>
 <head>
     <title>Song Collection</title>
+    <link rel="stylesheet" href="../../mystyle.css">
 </head>
 <body>
 
     <c:if test="${not empty SongCollection}">
-        <h1>Song Collection ${fn:escapeXml(SongCollection.getName())}</h1>
-                <p>User email: ${fn:escapeXml(SongCollection.getEmail())}
-                    <a href="/songCollection/${fn:escapeXml(SongCollection.getId())}/songs">  View songs  </a>
-                </p>
-                <br>
+        <h1>${fn:escapeXml(SongCollection.getName())} list</h1>
+        <h2>User: ${fn:escapeXml(SongCollection.getEmail())} </h2>
 
-        <a href="/songCollection/">   Return to list  </a>:
+                <a href="/songCollection/">   Return to list  </a>:
 
     </c:if>
     <c:if test="${empty SongCollection}">
         <p>Song collection not exists</p>
     </c:if>
 
+    <jsp:include page="/songCollection/${fn:escapeXml(SongCollection.getId())}/songs"></jsp:include>
+    <br>
+    <br>
+    <a href="/songCollection/"> Return</a>:
 
 </body>
 </html>

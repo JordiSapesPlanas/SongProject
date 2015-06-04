@@ -11,11 +11,11 @@
 <html>
 <head>
 
-
+    <link rel="stylesheet" href="../../mystyle.css">
 </head>
 <body>
 <h2>band list</h2>
-
+<a href="songCollection/${map.idCollection}/songs/"> View All Songs</a>
 
 <c:if test="${not empty map.bands}">
     <ul>
@@ -42,5 +42,11 @@
         </c:forEach>
     </ul>
 </c:if>
+<c:if test="${empty map.bands}">
+    Song not found
+    <br>
+    <a href="/songCollection/${map.idCollection}/songs/search"> Try Again</a>
+</c:if>
+<a href="/songCollection/${map.idCollection}/songs/"> View All Songs</a>
 </body>
 </html>
