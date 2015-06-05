@@ -20,6 +20,7 @@
     <form:form method="GET" action="search/" modelAttribute="song">
         <table align="center">
             <tr>
+
                 <td><form:label path="name">Name</form:label></td>
                 <td><form:input path="name"/> <i><form:errors path="name"></form:errors></i></td>
                 <td><input type="submit" class="btn btn-primary" value="GO"  style="margin: 4px"/></td>
