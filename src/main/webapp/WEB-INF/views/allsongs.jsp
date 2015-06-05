@@ -29,19 +29,16 @@
              <th>
                  Name
              </th>
-             <th>
-                 edit
-             </th>
+             <th></th>
+             <th></th>
 
          </tr>
             <c:forEach var="song" items="${map.songs}">
                 <tr>
                     <td> ${fn:escapeXml(song.getBand())} </td>
                     <td><a href="/songCollection/${map.idCollection}/songs/${song.getId()}"> ${fn:escapeXml(song.getName())}</a>: </td>
-
-
-                    <td><a href="/songCollection/${map.idCollection}/songs/${song.getId()}/form">Edit Song</a> </td>
-
+                    <td><a  type="button" class="btn btn-primary" href="/songCollection/${map.idCollection}/songs/${song.getId()}/form">Edit Song</a> </td>
+                    <td><button id="delete" value="${song.getId()}" class="btn btn-danger">Delete</button> </td>
                 </tr>
             </c:forEach>
         </c:if>
@@ -51,6 +48,19 @@
             <div style="text-align: center" >
         <a type="button" class="btn btn-primary"  href="/songCollection/${map.idCollection}/songs/form">Search Song</a>
                 </div>
+
+            <script>
+                $("#delete").click(function(e){
+                    value = this.value;
+                    $.ajax({
+                        url: '/songCollection/${map.idCollection}/songs/'+value,
+                        type: 'DELETE',
+                        success: function(result) {
+                            window.location.href ='/songCollection/${map.idCollection}'
+                        }
+                    });
+                });
+            </script>
 
 
 </div>

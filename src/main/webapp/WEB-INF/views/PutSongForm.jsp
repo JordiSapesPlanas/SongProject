@@ -27,13 +27,12 @@
       <tr>
             <td><input type="text" name="band" value="${map.song.getBand()}"/></td>
       </tr>
-      <tr>
-            <td><input type="button" class="btn btn-primary"  value="edit" /></td>
-       </tr>
-      <tr>
-            <td><button id="delete" type="button" class="btn btn-danger" style="margin: 2px" value="${map.song.getId()}"> Delete</button></td>
-      </tr>
   </table>
+        <div style="text-align: center" >
+            <input type="button" class="btn btn-primary"  value="edit" />
+            <button id="delete" type="button" class="btn btn-danger" style="margin: 2px" value="${map.song.getId()}">Delete</button>
+        </div>
+
 </form:form>
     <script>
         $("#delete").click(function(e){
@@ -42,7 +41,7 @@
                 url: '/songCollection/${map.idCollection}/songs/${map.song.getId()}',
                 type: 'DELETE',
                 success: function(result) {
-                    window.location.href ='/songCollection/${map.idCollection}/songs/'
+                    window.location.href ='/songCollection/${map.idCollection}/so'
                 }
             });
         });
