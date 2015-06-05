@@ -11,15 +11,16 @@
 <html>
 <head>
     <title>Song Collection</title>
-    <link rel="stylesheet" href="../../mystyle.css">
+    <%@include file="header.jsp" %>
+
 </head>
 <body>
+<%@include file="bar.jsp" %>
 
     <c:if test="${not empty SongCollection}">
         <h1>${fn:escapeXml(SongCollection.getName())} list</h1>
-        <h2>User: ${fn:escapeXml(SongCollection.getEmail())} </h2>
 
-                <a href="/songCollection/">   Return to list  </a>:
+
 
     </c:if>
     <c:if test="${empty SongCollection}">
@@ -27,9 +28,7 @@
     </c:if>
 
     <jsp:include page="/songCollection/${fn:escapeXml(SongCollection.getId())}/songs"></jsp:include>
-    <br>
-    <br>
-    <a href="/songCollection/"> Return</a>:
+
 
 </body>
 </html>

@@ -16,10 +16,11 @@
 
 </head> -->
  <div>
-    <h3>Songs </h3>
+
 
         <c:if test="${not empty map.songs}">
-        <table>
+            <h2> Songs </h2>
+        <table class="table table-striped">
          <tr>
              <th>
                  Band
@@ -47,8 +48,9 @@
 
     </table>
      <br>
-    <a href="/songCollection/${map.idCollection}/songs/form">Search Song</a>
-
+            <div style="text-align: center" >
+        <a type="button" class="btn btn-primary"  href="/songCollection/${map.idCollection}/songs/form">Search Song</a>
+                </div>
 
 
 </div>

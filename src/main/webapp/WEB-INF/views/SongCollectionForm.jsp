@@ -10,10 +10,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
-    <title></title>
-    <link rel="stylesheet" href="../../mystyle.css">
+    <title> Create your song</title>
+    <%@include file="header.jsp" %>
+
 </head>
 <body>
+<%@include file="bar.jsp" %>
     <header> Create a new collection of Song!</header>
 
  <form:form method="POST" action="/songCollection" modelAttribute="SongCollection">

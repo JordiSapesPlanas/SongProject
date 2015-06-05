@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>
-        <link rel="stylesheet" href="../../mystyle.css">
+
         <c:if test="${song.getId()>=0}">
          update song
         </c:if>
@@ -12,8 +12,11 @@
             search Song
         </c:if>
     </title>
+    <%@include file="header.jsp" %>
+
 </head>
 <body>
+<%@include file="bar.jsp" %>
     <c:choose>
         <c:when test="${song.getId()>=0}">
             <h3>Update Song</h3>

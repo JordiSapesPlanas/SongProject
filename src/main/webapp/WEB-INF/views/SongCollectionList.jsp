@@ -13,37 +13,17 @@
 <html>
 <head>
     <title>Song Collection</title>
-    <link rel="stylesheet" href="../../mystyle.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"/>
 
+    <%@include file="header.jsp" %>
 
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">Lists</a>
-            </div>
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li><a href="/songCollection/form">Create your List</a></li>
+<%@include file="bar.jsp" %>
 
-                </ul>
-            </div><!--/.nav-collapse -->
-        </div>
-    </nav>
 
-    <h1>Music list</h1>
-    </div>
         <c:if test="${not empty SongCollection}">
-            <table align="center">
+            <h1>Music list</h1>
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>
@@ -77,8 +57,10 @@
             </c:forEach>
             </table>
         </c:if>
-
     <br>
+    <div style="text-align: center" >
+        <button type="button" class="btn btn-primary" onclick="location.href='/songCollection/form'"> Create your List</button>
+    </div>
 
 
 

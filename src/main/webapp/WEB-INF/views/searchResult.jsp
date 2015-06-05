@@ -11,9 +11,12 @@
 <html>
 <head>
 
-    <link rel="stylesheet" href="../../mystyle.css">
+   <title> Result search</title>
+    <%@include file="header.jsp" %>
+
 </head>
 <body>
+<%@include file="bar.jsp" %>
 <h2>band list</h2>
 <a href="songCollection/${map.idCollection}/songs/"> View All Songs</a>
 
