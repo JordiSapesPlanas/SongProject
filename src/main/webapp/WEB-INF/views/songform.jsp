@@ -5,37 +5,25 @@
 <head>
     <title>
 
-        <c:if test="${song.getId()>=0}">
-         update song
-        </c:if>
-        <c:if test="${song.getId()<0}">
             search Song
-        </c:if>
     </title>
     <%@include file="header.jsp" %>
 
 </head>
 <body>
 <%@include file="bar.jsp" %>
-    <c:choose>
-        <c:when test="${song.getId()>=0}">
-            <h3>Update Song</h3>
-            <c:set var="method" value="PUT"/>
-            <c:set var="action" value="javascript:history.back()/"/>
-
-        </c:when>
-        <c:otherwise>
-            <h3>Search Song</h3>
-            <c:set var="method" value="GET"/>
-            <c:set var="action" value="search"/>
-        </c:otherwise>
-    </c:choose>
-
-    <form:form method="${method}" action="${action}" modelAttribute="song">
-        <table>
+<br>
+<br>
+    <div align="center">
+        <h1>Search the song by name!</h1>
+    </div>
+    <form:form method="GET" action="search/" modelAttribute="song">
+        <table align="center">
             <tr>
                 <td><form:label path="name">Name</form:label></td>
                 <td><form:input path="name"/> <i><form:errors path="name"></form:errors></i></td>
+                <td><input type="submit" class="btn btn-primary" value="GO"  style="margin: 4px"/></td>
+
             </tr>
             <tr>
                 <c:if test="${song.getId()>=0}">
@@ -47,10 +35,11 @@
                     <td><form:input path="band" value=""/></td>
                 </c:if>
             </tr>
-            <tr>
-                <td><input type="submit" value="Submit" /></td>
-            </tr>
+>
         </table>
+        <div align="center">
+
+        </div>
     </form:form>
 </body>
 </html>

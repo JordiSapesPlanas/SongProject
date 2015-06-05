@@ -16,7 +16,8 @@
 </head>
 <body>
 <%@include file="bar.jsp" %>
-    <header> Create a new collection of Song!</header>
+    <div align="center">
+    <h1>Create your List!</h1>
 
  <form:form method="POST" action="/songCollection" modelAttribute="SongCollection">
         <p><form:label path="email">Email</form:label>
@@ -27,7 +28,8 @@
             <form:label path="name">Name</form:label>
             <form:input path="name"/> <i><form:errors path="name"></form:errors></i>
         </p>
-     <input type="submit" value="Submit" />
+     <input class="btn btn-primary"type="submit" value="Submit" />
 </form:form>
+    </div>
 </body>
 </html>

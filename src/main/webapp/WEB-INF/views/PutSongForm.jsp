@@ -11,7 +11,12 @@
 </head>
 <body>
 <%@include file="bar.jsp" %>
-    <h3>Update Song</h3>
+
+<br>
+<br>
+<div align="center">
+<h3>Modify Song</h3>
+</div>
 
 <form:form method="PUT" action="/songCollection/${map.idCollection}/songs/${map.song.getId()}">
   <table align="center">
@@ -29,7 +34,7 @@
       </tr>
   </table>
         <div style="text-align: center" >
-            <input type="button" class="btn btn-primary"  value="edit" />
+            <input type="submit" class="btn btn-primary"  value="edit" />
             <button id="delete" type="button" class="btn btn-danger" style="margin: 2px" value="${map.song.getId()}">Delete</button>
         </div>
 
@@ -41,7 +46,7 @@
                 url: '/songCollection/${map.idCollection}/songs/${map.song.getId()}',
                 type: 'DELETE',
                 success: function(result) {
-                    window.location.href ='/songCollection/${map.idCollection}/so'
+                    window.location.href ='/songCollection/${map.idCollection}'
                 }
             });
         });

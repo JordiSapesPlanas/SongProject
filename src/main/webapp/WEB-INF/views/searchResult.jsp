@@ -17,39 +17,56 @@
 </head>
 <body>
 <%@include file="bar.jsp" %>
-<h2>band list</h2>
-<a href="songCollection/${map.idCollection}/songs/"> View All Songs</a>
+<br>
+<br>
+<br>
+<div align="center">
+    <a type="button" class="btn btn-default" href="/songCollection/${map.idCollection}"> View Songs</a>
+    <a type="button" class="btn btn-primary" href="/songCollection/${map.idCollection}/songs/form"> Try Again</a>
+
+</div>
 
 <c:if test="${not empty map.bands}">
-    <ul>
-        <c:forEach var="band" items="${map.bands}">
+
+        <table class="table table-striped">
+            <th>
+                Band Name
+            </th>
+            <th>
+                Song name
+            </th>
+            <th>
+
+            </th>
+            <c:forEach var="band" items="${map.bands}">
+
+
             <form method="POST" action="/songCollection/${map.idCollection}/songs">
-                <li>
-                    <table>
+
+
                         <tr>
 
                             <td>${band}<input type="hidden" name="band" value="${band}" />
 
 
 
-                            <td> - ${map.song} <input type="hidden" name="name" value="${map.song}"/></td>
-                            <td><input type="submit" value="add" /></td>
+                            <td> ${map.song} <input type="hidden" name="name" value="${map.song}"/></td>
+                            <td><input type="submit" class="btn btn-success" value="add" /></td>
                         </tr>
 
 
 
-                    </table>
-                </li>
+
+
 
             </form>
+
         </c:forEach>
-    </ul>
+        </table>
+
 </c:if>
-<c:if test="${empty map.bands}">
-    Song not found
-    <br>
-    <a href="/songCollection/${map.idCollection}/songs/search"> Try Again</a>
-</c:if>
-<a href="/songCollection/${map.idCollection}/songs/"> View All Songs</a>
-</body>
+<div align="center">
+<a type="button" class="btn btn-default" href="/songCollection/${map.idCollection}"> View Songs</a>
+<a type="button" class="btn btn-primary" href="/songCollection/${map.idCollection}/songs/form"> Try Again</a></body>
+</div>
 </html>

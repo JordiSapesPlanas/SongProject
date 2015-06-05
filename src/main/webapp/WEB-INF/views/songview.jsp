@@ -11,8 +11,12 @@
     </head>
     <body>
     <%@include file="bar.jsp" %>
-        <h3>Song: ${fn:escapeXml(map.song.getName())}</h3>
-        <p>${fn:escapeXml(map.song.getName())} - ${fn:escapeXml(map.song.getBand())}</p>
-        <a href="/songCollection/${fn:escapeXml(map.idCollection)}/songs">Return to list</a>
+    <br>
+    <br>
+        <div align="center">
+            <h3> ${fn:escapeXml(map.song.getName())} is in your list now!</h3>
+            <p>${fn:escapeXml(map.song.getName())} - ${fn:escapeXml(map.song.getBand())}</p>
+            <a class="btn btn-primary" href="/songCollection/${fn:escapeXml(map.idCollection)}">View your songs</a>
+        </div>
     </body>
 </html>
