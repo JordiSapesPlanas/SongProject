@@ -1,6 +1,7 @@
 package com.udl.softarch.springexample.controllers;
 
 import com.udl.softarch.springexample.models.Song;
+import com.udl.softarch.springexample.models.SongCollection;
 import com.udl.softarch.springexample.repositories.SongRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -9,29 +10,24 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.google.common.base.Preconditions;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import javax.xml.parsers.DocumentBuilder;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xquery.*;
 import java.io.*;
 import java.lang.Object;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
-
-import static com.udl.softarch.springexample.repositories.SongRepository.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by davidkaste on 16/02/15.
@@ -48,20 +44,20 @@ public class SongController {
     @RequestMapping(value = "/songs/search", method = RequestMethod.GET)  //? get parameters from query?
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Iterable<String> listArtistsBySong(@RequestParam(value ="song" , required = true)String song
+    public Iterable<XQueryHelper.Song> listArtistsBySong(@RequestParam(value = "song", required = true) String song
     ) throws MalformedURLException {
         ArrayList<String> bandList = new ArrayList<String>();
         String s = "https://musicbrainz.org/ws/2/recording/?query=";
         StringTokenizer st = new StringTokenizer(song);
         String aux = new String();
-        while(st.hasMoreTokens()){
-             aux = aux+st.nextToken()+"%20";
+        while (st.hasMoreTokens()) {
+            aux = aux + st.nextToken() + "%20";
         }
-        s = s  +aux;
+        s = s + aux;
         URL url = new URL(s);
 
         DocumentBuilderFactory doc = DocumentBuilderFactory.newInstance();
-        try {
+        /*try {
             DocumentBuilder db = doc.newDocumentBuilder();
             Document document = db.parse(url.openStream());
             document.getDocumentElement().normalize();
@@ -76,22 +72,38 @@ public class SongController {
                 NodeList nameList = e.getElementsByTagName("name");
                 Node artistName = nameList.item(0);
                 bandList.add(artistName.getTextContent().toString());
-            }
+            }*/
 
-            return bandList;
+        //String apiURL = "http://musicbrainz.org/ws/2/artist/cc2c9c3c-b7bc-4b8b-84d8-4fbd8779e493?inc=releases";
+        String albumsXQ =
+                "declare namespace mmd=\"http://musicbrainz.org/ns/mmd-2.0#\";\n"
+                        + "declare variable $doc external;\n"
+                        + "for $rec in $doc//mmd:recording\n"
+                        + "let $art := $rec/mmd:artist-credit\n"
+                        + "let $rel := $rec//mmd:release[1]\n"
+                        + "order by $rel/mmd:date\n"
+                        + "return <song>\n"
+                        + "<band>{$art//mmd:name/text()}</band>\n"
+                        + "<album>{$rel/mmd:title/text()}</album>\n"
+                        + "<releaseDate>{$rel/mmd:date/text()}</releaseDate>\n"
+                        + "<releaseCountry>{$rel/mmd:country/text()}</releaseCountry>\n"
+                        + "</song>";
 
-
+        try {
+            XQueryHelper xQueryHelper = new XQueryHelper(albumsXQ, url);
+            ArrayList<XQueryHelper.Song> songs = xQueryHelper.getSongs();
+            return songs;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null;
+    return null;
     }
+
     @RequestMapping(value = "/songs/search", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView listArtistsBySongHTML(  @RequestParam(value ="name" , required = true)String song,
-                                                @PathVariable("idCollection") Long idCol)throws Exception {
-        Map <String, Object> model = new HashMap<>();
-        model.put("bands", listArtistsBySong(song));
+    public ModelAndView listArtistsBySongHTML(@RequestParam(value = "name", required = true) String song,
+                                              @PathVariable("idCollection") Long idCol) throws Exception {
+        Map<String, Object> model = new HashMap<>();
+        model.put("searchList", listArtistsBySong(song));
         model.put("song", song);
         model.put("idCollection", idCol);
         return new ModelAndView("searchResult", "map", model);
@@ -101,16 +113,16 @@ public class SongController {
     @RequestMapping(value = "/songs", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Song> list(@RequestParam(required = false, defaultValue = "0") int page,
-                                   @RequestParam(required = false, defaultValue = "10") int size) {
+                               @RequestParam(required = false, defaultValue = "10") int size) {
         PageRequest request = new PageRequest(page, size);
-        return  songRepository.findAll(request).getContent();
+        return songRepository.findAll(request).getContent();
     }
 
-    @RequestMapping(value = "/songs",method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value = "/songs", method = RequestMethod.GET, produces = "text/html")
     public ModelAndView listHtml(@RequestParam(required = false, defaultValue = "0") int page,
                                  @RequestParam(required = false, defaultValue = "10") int size,
                                  @PathVariable("idCollection") Long idCol) {
-        Map <String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>();
         model.put("songs", list(page, size));
         model.put("idCollection", idCol);
         return new ModelAndView("allsongs", "map", model);
@@ -126,10 +138,10 @@ public class SongController {
     }
 
     @RequestMapping(value = "/songs/{id}", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView retrieveHTML(@PathVariable( "id" ) Long id,
+    public ModelAndView retrieveHTML(@PathVariable("id") Long id,
                                      @PathVariable("idCollection") Long idCol) {
 
-        Map <String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>();
         Song s = retrieve(id);
         model.put("song", retrieve(id));
         model.put("idCollection", idCol);
@@ -137,7 +149,7 @@ public class SongController {
     }
 
     // CREATE
-    @RequestMapping(value = "/songs", method = RequestMethod.POST )
+    @RequestMapping(value = "/songs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Song create(@Valid @RequestBody Song song, HttpServletResponse response) {
@@ -147,23 +159,23 @@ public class SongController {
         return s;
     }
 
-    @RequestMapping(value = "/songs" , method = RequestMethod.POST , consumes = "application/x-www-form-urlencoded", produces = "text/html")
+    @RequestMapping(value = "/songs", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "text/html")
     public String createHtml(@Valid @ModelAttribute("song") Song song, BindingResult binding, HttpServletResponse response,
                              @PathVariable("idCollection") Long idCol) {
         System.out.println("produces html");
-        if(binding.hasErrors()) {
+        if (binding.hasErrors()) {
             System.out.println("meeeeu");
-            return "redirect:/songCollection/"+idCol+"/songs/form";
+            return "redirect:/songCollection/" + idCol + "/songs/form";
         }
 
         Long id = create(song, response).getId();
-        return "redirect:/songCollection/"+idCol+"/songs/"+id;
+        return "redirect:/songCollection/" + idCol + "/songs/" + id;
 
         //return "heloo baby";
     }
 
     @RequestMapping(value = "/songs/form", method = RequestMethod.GET, produces = "text/html")
-    public ModelAndView createForm(){
+    public ModelAndView createForm() {
 
         Song emptysong = new Song();
         return new ModelAndView("songform", "song", emptysong);
@@ -184,19 +196,19 @@ public class SongController {
     @ResponseStatus(HttpStatus.OK)
     public String updateHTML(@PathVariable("id") Long id,
                              @Valid @ModelAttribute("song") Song song,
-                             @PathVariable("idCollection")Long idCol,
+                             @PathVariable("idCollection") Long idCol,
                              BindingResult binding) {
         if (binding.hasErrors()) {
-            return "redirect:/songCollection/"+idCol+"/songs/"+id+"/form";
+            return "redirect:/songCollection/" + idCol + "/songs/" + id + "/form";
         }
-        return "redirect:/songCollection/"+idCol+"/songs/" + update(id, song).getId();
+        return "redirect:/songCollection/" + idCol + "/songs/" + update(id, song).getId();
     }
 
     // Update form
     @RequestMapping(value = "/songs/{id}/form", method = RequestMethod.GET, produces = "text/html")
     public ModelAndView updateForm(@PathVariable("id") Long id, @PathVariable("idCollection") Long idCol) {
-        Map <String, Object> model = new HashMap<>();
-       
+        Map<String, Object> model = new HashMap<>();
+
         model.put("song", songRepository.findOne(id));
         model.put("idCollection", idCol);
 
@@ -216,4 +228,69 @@ public class SongController {
         delete(id);
         return "redirect:/songCollection/{id}/songs";
     }
+
+    public static class XQueryHelper {
+        private final Logger log = Logger.getLogger(XQueryHelper.class.getName());
+
+        private XQPreparedExpression expr;
+        private XQConnection conn;
+
+        private JAXBContext jaxbContext;
+        private Unmarshaller jaxbUnmarshaller;
+
+
+        @XmlRootElement
+        private static class Song {
+            @XmlElement String band;
+            @XmlElement String album;
+            @XmlElement String releaseCountry;
+            @XmlElement Integer releaseDate;
+
+            @Override
+            public String toString() {
+                return "Title: "+band+"\n"+"Artist: "+album+"\n"+"Countries: "+releaseCountry+"\n"+"Year: "+releaseDate+"\n";
+            }
+        }
+
+        XQueryHelper(String xquery, URL url)
+                throws ClassNotFoundException, InstantiationException, IllegalAccessException, XQException, IOException, JAXBException {
+            URLConnection urlconn = url.openConnection();
+            urlconn.setReadTimeout(50000);
+
+            XQDataSource xqds = (XQDataSource) Class.forName("net.sf.saxon.xqj.SaxonXQDataSource").newInstance();
+            this.conn = xqds.getConnection();
+            this.expr = conn.prepareExpression(xquery);
+            this.expr.bindDocument(new javax.xml.namespace.QName("doc"), urlconn.getInputStream(), null, null);
+
+            this.jaxbContext = JAXBContext.newInstance(Song.class);
+            this.jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        }
+
+        ArrayList<Song> getSongs() {
+            ArrayList<Song> songs = new ArrayList<Song>();
+            try {
+                XQResultSequence rs = this.expr.executeQuery();
+                while (rs.next()) {
+                    XQItem item = rs.getItem();
+                    Song song = (Song) jaxbUnmarshaller.unmarshal(item.getNode());
+                    songs.add(song);
+                }
+            }
+            catch (Exception e) {
+                log.log(Level.SEVERE, e.getMessage());
+            }
+            finally { close(); }
+            return songs;
+        }
+
+        private void close() {
+            try {
+                this.expr.close();
+                this.conn.close();
+            } catch (XQException e) {
+                log.log(Level.SEVERE, e.getMessage());
+            }
+        }
+    }
 }
+

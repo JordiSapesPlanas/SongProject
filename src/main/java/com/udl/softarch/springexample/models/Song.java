@@ -25,13 +25,17 @@ public class Song {
     @Size(max = 256, message = "Band name, max length is {max}")
     private String band;
 
+    private String releaseCountry;
 
+    private int releaseDate;
 
     public Song() {}
 
-    public Song(String name, String band) {
+    public Song(String name, String band, String releaseCountry, int releaseDate) {
         this.name = name;
         this.band = band;
+        this.releaseCountry = releaseCountry;
+        this.releaseDate = releaseDate;
 
     }
 

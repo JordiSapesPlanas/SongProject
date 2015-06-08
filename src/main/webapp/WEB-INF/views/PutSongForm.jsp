@@ -41,7 +41,7 @@
                 url: '/songCollection/${map.idCollection}/songs/${map.song.getId()}',
                 type: 'DELETE',
                 success: function(result) {
-                    window.location.href ='/songCollection/${map.idCollection}/so'
+                    window.location.href ='/songCollection/${map.idCollection}'
                 }
             });
         });
