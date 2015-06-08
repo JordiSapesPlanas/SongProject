@@ -44,7 +44,7 @@ public class SongController {
     @RequestMapping(value = "/songs/search", method = RequestMethod.GET)  //? get parameters from query?
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Iterable<XQueryHelper.Song> listArtistsBySong(@RequestParam(value = "song", required = true) String song
+    public Iterable<Song> listArtistsBySong(@RequestParam(value = "song", required = true) String song
     ) throws MalformedURLException {
         ArrayList<String> bandList = new ArrayList<String>();
         String s = "https://musicbrainz.org/ws/2/recording/?query=";
@@ -74,7 +74,6 @@ public class SongController {
                 bandList.add(artistName.getTextContent().toString());
             }*/
 
-        //String apiURL = "http://musicbrainz.org/ws/2/artist/cc2c9c3c-b7bc-4b8b-84d8-4fbd8779e493?inc=releases";
         String albumsXQ =
                 "declare namespace mmd=\"http://musicbrainz.org/ns/mmd-2.0#\";\n"
                         + "declare variable $doc external;\n"
@@ -85,14 +84,17 @@ public class SongController {
                         + "return <song>\n"
                         + "<band>{$art//mmd:name/text()}</band>\n"
                         + "<album>{$rel/mmd:title/text()}</album>\n"
-                        + "<releaseDate>{$rel/mmd:date/text()}</releaseDate>\n"
+                        + "<releaseDate>{$rel/mmd:date/number()}</releaseDate>\n"
                         + "<releaseCountry>{$rel/mmd:country/text()}</releaseCountry>\n"
                         + "</song>";
 
         try {
             XQueryHelper xQueryHelper = new XQueryHelper(albumsXQ, url);
             ArrayList<XQueryHelper.Song> songs = xQueryHelper.getSongs();
-            return songs;
+            ArrayList<Song> songFinal = new ArrayList<Song>();
+            for (XQueryHelper.Song song1 : songs)
+                songFinal.add(new Song(song,song1.getBand(),song1.getAlbum(),song1.getReleaseCountry(),song1.getReleaseDate()));
+            return songFinal;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -244,11 +246,27 @@ public class SongController {
             @XmlElement String band;
             @XmlElement String album;
             @XmlElement String releaseCountry;
-            @XmlElement Integer releaseDate;
+            @XmlElement String releaseDate;
+
+            public String getAlbum() {
+                return album;
+            }
+
+            public String getReleaseCountry() {
+                return releaseCountry;
+            }
+
+            public String getReleaseDate() {
+                return releaseDate;
+            }
+
+            public String getBand() {
+                return band;
+            }
 
             @Override
             public String toString() {
-                return "Title: "+band+"\n"+"Artist: "+album+"\n"+"Countries: "+releaseCountry+"\n"+"Year: "+releaseDate+"\n";
+                return "heeeeeeeakabsdkjabfkajdbf: "+band+"\n"+"Artist: "+album+"\n"+"Countries: "+releaseCountry+"\n"+"Year: "+releaseDate+"\n";
             }
         }
 
@@ -262,17 +280,17 @@ public class SongController {
             this.expr = conn.prepareExpression(xquery);
             this.expr.bindDocument(new javax.xml.namespace.QName("doc"), urlconn.getInputStream(), null, null);
 
-            this.jaxbContext = JAXBContext.newInstance(Song.class);
+            this.jaxbContext = JAXBContext.newInstance(XQueryHelper.Song.class);
             this.jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         }
 
-        ArrayList<Song> getSongs() {
-            ArrayList<Song> songs = new ArrayList<Song>();
+        ArrayList<XQueryHelper.Song> getSongs() {
+            ArrayList<XQueryHelper.Song> songs = new ArrayList<XQueryHelper.Song>();
             try {
                 XQResultSequence rs = this.expr.executeQuery();
                 while (rs.next()) {
                     XQItem item = rs.getItem();
-                    Song song = (Song) jaxbUnmarshaller.unmarshal(item.getNode());
+                    XQueryHelper.Song song = (XQueryHelper.Song) jaxbUnmarshaller.unmarshal(item.getNode());
                     songs.add(song);
                 }
             }

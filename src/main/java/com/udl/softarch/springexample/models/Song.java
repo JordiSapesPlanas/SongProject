@@ -21,21 +21,29 @@ public class Song {
     @Size(max = 256, message = "Name maximum length is {max} characters long")
     private String name;
 
-    @NotBlank(message = "Not empty band")
     @Size(max = 256, message = "Band name, max length is {max}")
     private String band;
 
+    @Size(max = 256, message = "Name maximum length is {max} characters long")
     private String releaseCountry;
 
-    private int releaseDate;
+    @Size(max = 256, message = "Name maximum length is {max} characters long")
+    private String releaseDate;
+
+    @Size(max = 256, message = "Name maximum length is {max} characters long")
+    private String album;
 
     public Song() {}
 
-    public Song(String name, String band, String releaseCountry, int releaseDate) {
+
+
+
+    public Song(String name, String band, String album, String releaseCountry, String releaseDate) {
         this.name = name;
         this.band = band;
         this.releaseCountry = releaseCountry;
         this.releaseDate = releaseDate;
+        this.album = album;
 
     }
 
@@ -45,6 +53,18 @@ public class Song {
 
     public String getBand() {
         return band;
+    }
+
+    public String getReleaseCountry() {
+        return releaseCountry;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public String getAlbum() {
+        return album;
     }
 
     public String getName(){

@@ -26,7 +26,7 @@
 
 </div>
 
-<c:if test="${not empty map.bands}">
+<c:if test="${not empty map.searchList}">
 
         <table class="table table-striped">
             <th>
@@ -36,28 +36,28 @@
                 Song name
             </th>
             <th>
+                Date
+            </th>
+            <th>
+                Country
+            </th>
+            <th>
 
             </th>
-            <c:forEach var="band" items="${map.bands}">
+            <c:forEach var="song" items="${map.searchList}">
 
 
             <form method="POST" action="/songCollection/${map.idCollection}/songs">
-
-
                         <tr>
+                            <td>${song.getBand()}<input type="hidden" name="band" value="${song.getBand()}" />
+                            <td>${song.getAlbum()}<input type="hidden" name="album" value="${song.getAlbum()}" />
+                            <td>${song.getReleaseDate()}<input type="hidden" name="releaseDate" value="${song.getReleaseDate()}" />
+                            <td>${song.getReleaseCountry()}<input type="hidden" name="releaseCountry" value="${song.getReleaseCountry()}" />
 
-                            <td>${band}<input type="hidden" name="band" value="${band}" />
 
-
-
-                            <td> ${map.song} <input type="hidden" name="name" value="${map.song}"/></td>
+                            <input type="hidden" name="name" value="${map.song}"/>
                             <td><input type="submit" class="btn btn-success" value="add" /></td>
                         </tr>
-
-
-
-
-
 
             </form>
 
