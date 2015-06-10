@@ -42,5 +42,6 @@
 
         </div>
     </form:form>
+    <%@include file="searchResult.jsp"%>
 </body>
 </html>

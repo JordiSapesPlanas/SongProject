@@ -8,15 +8,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-
-   <title> Result search</title>
-    <%@include file="header.jsp" %>
-
-</head>
-<body>
-<%@include file="bar.jsp" %>
+<div ng-controller="">
 <br>
 <br>
 <br>
@@ -69,4 +61,5 @@
 <a type="button" class="btn btn-default" href="/songCollection/${map.idCollection}"> View Songs</a>
 <a type="button" class="btn btn-primary" href="/songCollection/${map.idCollection}/songs/form"> Try Again</a></body>
 </div>
-</html>
+</div>
+
