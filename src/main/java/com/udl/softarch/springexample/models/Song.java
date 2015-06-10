@@ -35,9 +35,6 @@ public class Song {
 
     public Song() {}
 
-
-
-
     public Song(String name, String band, String album, String releaseCountry, String releaseDate) {
         this.name = name;
         this.band = band;
